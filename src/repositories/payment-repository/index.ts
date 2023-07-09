@@ -27,6 +27,10 @@ export async function createTicket(token: string, ticketTypeId: number) {
             token: token
         }
     });
+    
+    if(!user){
+        throw notFoundError();
+    }
 
     const enrollment = await prisma.enrollment.findFirst({
         where: {
@@ -41,7 +45,38 @@ export async function createTicket(token: string, ticketTypeId: number) {
             enrollmentId: enrollment.id,
         }
     });
-    return
+
+    const ticketType = await prisma.ticketType.findFirst({
+        where:{
+          id:ticketTypeId
+        }
+    });
+
+    const ticket = await prisma.ticket.findFirst({
+        where:{
+          enrollmentId:enrollment.id
+        }
+    });
+
+    const data = {
+        id: ticket.id,
+        status: ticket.status, 
+        ticketTypeId: ticketTypeId,
+        enrollmentId: enrollment.id,
+        TicketType: {
+          id: ticketType.id,
+          name: ticketType.name,
+          price: ticketType.price,
+          isRemote: ticketType.isRemote,
+          includesHotel: ticketType.includesHotel,
+          createdAt: ticketType.createdAt,
+          updatedAt: ticketType.updatedAt,
+        },
+        createdAt:ticket.createdAt,
+        updatedAt: ticket.updatedAt
+      };
+    
+      return data;
 }
 
 const paymentRepository = {

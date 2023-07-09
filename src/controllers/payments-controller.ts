@@ -30,8 +30,11 @@ export async function postTickets(req: Request, res: Response) {
     const { ticketTypeId } = req.body;
     try {
         const ticket = await postNewTicket(authorization.toString(), parseInt(ticketTypeId));
-        return res.status(httpStatus.OK).send(ticket);
+        return res.status(httpStatus.CREATED).send(ticket);
     } catch (err) {
+        if (err.name === 'NotFoundError') {
+            return res.sendStatus(httpStatus.NOT_FOUND);
+        }
         return res.sendStatus(httpStatus.BAD_REQUEST);
     }
 }

@@ -14,5 +14,10 @@ export async function getTicketsUser(token: string){
 };
 
 export async function postNewTicket(token: string, ticketTypeId: number){
-    return await paymentRepository.createTicket(token, ticketTypeId);
+    if (!ticketTypeId){
+        throw "error"
+    }
+    const ticket = await paymentRepository.createTicket(token, ticketTypeId);
+    
+    return ticket;
 };
