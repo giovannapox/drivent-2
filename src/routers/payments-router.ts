@@ -5,7 +5,7 @@ import { Router } from "express";
 const paymentsRouter = Router();
 
 paymentsRouter
-    //.all("/*", authenticateToken)
+    .all("/*", authenticateToken)
     .get('/tickets', getTickets)
     .get('/tickets/types', getTicketsTypes)
     .post('/tickets', postTickets)
