@@ -44,7 +44,7 @@ export async function getPayment(req: Request, res: Response) {
     const { ticketId } = req.query
     try {
         const payment = await getPayments(authorization.toString(), Number(ticketId))
-        res.status(httpStatus.OK).send(payment)
+        return res.status(httpStatus.OK).send(payment)
     } catch (err) {
         if (err.name === 'NotFoundError') {
             return res.sendStatus(httpStatus.NOT_FOUND);
