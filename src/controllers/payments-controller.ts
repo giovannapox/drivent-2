@@ -1,15 +1,17 @@
+
+import { AuthenticatedRequest } from "@/middlewares";
 import { Payment } from "@/protocols";
 import { getPayments, getTicketsByType, getTicketsUser, postNewTicket, postPayment } from "@/services/payments-service";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 
-export async function getTickets(req: Request, res: Response) {
+export async function getTickets(req: AuthenticatedRequest, res: Response) {
     const authHeader = req.header('Authorization');
 
     const token = authHeader.split(' ')[1];
-    
+
     try {
-        const ticket = await getTicketsUser(token);
+        const ticket = await getTicketsUser(token, req.userId);
         return res.status(httpStatus.OK).send(ticket);
     } catch (err) {
         if (err.name === 'NotFoundError') {

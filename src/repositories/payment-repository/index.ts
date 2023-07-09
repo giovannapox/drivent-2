@@ -13,10 +13,6 @@ export async function getTickets(token: string) {
         }
     });
     
-    if (!user) {
-        throw notFoundError();
-    }
-    
     return prisma.ticket.findFirst({
         where: {
             id: user.userId

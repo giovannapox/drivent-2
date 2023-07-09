@@ -1,13 +1,22 @@
 import { notFoundError } from "@/errors";
 import { Payment } from "@/protocols";
+import enrollmentRepository from "@/repositories/enrollment-repository";
 import paymentRepository from "@/repositories/payment-repository";
 
 export async function getTicketsByType(){
     return await paymentRepository.ticketsByTypes();
 };
 
-export async function getTicketsUser(token: string){
+export async function getTicketsUser(token: string, userId: number){
+    const enrollment = await enrollmentRepository.findUserEnrollment(userId)
+    if(!enrollment) {
+        throw notFoundError();
+    }
+
     const tickets = await paymentRepository.getTickets(token);
+    if(!tickets){
+        throw notFoundError();
+    }
     
     return tickets
 };
