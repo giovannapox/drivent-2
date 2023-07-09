@@ -4,15 +4,18 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 
 export async function getTickets(req: Request, res: Response) {
-    const { authorization } = req.headers;
+    const authHeader = req.header('Authorization');
+
+    const token = authHeader.split(' ')[1];
+    
     try {
-        const ticket = await getTicketsUser(authorization.toString());
+        const ticket = await getTicketsUser(token);
         return res.status(httpStatus.OK).send(ticket);
     } catch (err) {
         if (err.name === 'NotFoundError') {
             return res.sendStatus(httpStatus.NOT_FOUND);
         }
-        return res.sendStatus(httpStatus.BAD_REQUEST);
+        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 
