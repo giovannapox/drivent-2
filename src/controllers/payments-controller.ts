@@ -1,4 +1,5 @@
-import { getTicketsByType, getTicketsUser, postNewTicket } from "@/services/payments-service";
+import { Payment } from "@/protocols";
+import { getPayments, getTicketsByType, getTicketsUser, postNewTicket, postPayment } from "@/services/payments-service";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 
@@ -39,18 +40,37 @@ export async function postTickets(req: Request, res: Response) {
     }
 }
 
-export async function getPayments(req: Request, res: Response) {
+export async function getPayment(req: Request, res: Response) {
+    const { authorization } = req.headers
+    const { ticketId } = req.query
     try {
-
+        const payment = await getPayments(authorization.toString(), Number(ticketId))
+        res.status(httpStatus.OK).send(payment)
     } catch (err) {
+        if (err.name === 'NotFoundError') {
+            return res.sendStatus(httpStatus.NOT_FOUND);
+        }
+        if (err.name === 'UnauthorizedError') {
+            return res.sendStatus(httpStatus.UNAUTHORIZED);
+        }
         return res.sendStatus(httpStatus.BAD_REQUEST);
     }
 }
 
 export async function postPayments(req: Request, res: Response) {
-    try {
+    const { authorization } = req.headers;
+    const payment = req.body as Payment;
 
+    try {
+        const payments = await postPayment(authorization.toString(), payment)
+        return res.status(httpStatus.OK).send(payments);
     } catch (err) {
+        if (err.name === "NotFoundError") {
+            return res.status(httpStatus.NOT_FOUND).send(err)
+        }
+        if (err.name === "UnauthorizedError") {
+            return res.status(httpStatus.UNAUTHORIZED).send(err)
+        }
         return res.sendStatus(httpStatus.BAD_REQUEST);
     }
 }
