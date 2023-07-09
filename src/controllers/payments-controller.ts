@@ -5,11 +5,12 @@ import httpStatus from "http-status";
 
 export async function getTickets(req: Request, res: Response) {
     const authHeader = req.header('Authorization');
+    const { ticketTypeId } = req.body;
 
     const token = authHeader.split(' ')[1];
 
     try {
-        const ticket = await getTicketsUser(token);
+        const ticket = await getTicketsUser(token, parseInt(ticketTypeId));
         return res.status(httpStatus.OK).send(ticket);
     } catch (err) {
         if (err.name === 'NotFoundError') {
