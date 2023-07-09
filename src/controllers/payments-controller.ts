@@ -7,7 +7,6 @@ export async function getTickets(req: Request, res: Response) {
     const { authorization } = req.headers;
     try {
         const ticket = await getTicketsUser(authorization.toString());
-        console.log(ticket)
         return res.status(httpStatus.OK).send(ticket);
     } catch (err) {
         if (err.name === 'NotFoundError') {
