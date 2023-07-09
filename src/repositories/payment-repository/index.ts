@@ -1,17 +1,17 @@
 import { prisma } from '@/config';
 import { notFoundError } from '@/errors';
 
-export async function ticketsByTypes(){
+export async function ticketsByTypes() {
     return prisma.ticketType.findMany();
 };
 
-export async function getTickets(token: string){
+export async function getTickets(token: string) {
     const user = await prisma.session.findFirst({
         where: {
             token: token
         }
     });
-    if(!user){
+    if (!user) {
         throw notFoundError();
     }
     return prisma.ticket.findFirst({
@@ -21,9 +21,33 @@ export async function getTickets(token: string){
     });
 };
 
+export async function createTicket(token: string, ticketTypeId: number) {
+    const user = await prisma.session.findFirst({
+        where: {
+            token: token
+        }
+    });
+
+    const enrollment = await prisma.enrollment.findFirst({
+        where: {
+            userId: user.userId
+        }
+    });
+
+    await prisma.ticket.create({
+        data: {
+            status: "RESERVED",
+            ticketTypeId,
+            enrollmentId: enrollment.id,
+        }
+    });
+    return
+}
+
 const paymentRepository = {
     ticketsByTypes,
-    getTickets
+    getTickets,
+    createTicket
 };
 
 export default paymentRepository;

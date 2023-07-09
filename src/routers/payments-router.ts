@@ -1,4 +1,4 @@
-import { getTickets, getTicketsTypes } from "@/controllers";
+import { getTickets, getTicketsTypes, postTickets } from "@/controllers";
 import { authenticateToken } from "@/middlewares";
 import { Router } from "express";
 
@@ -8,7 +8,7 @@ paymentsRouter
     .all("/*", authenticateToken)
     .get('/tickets', getTickets)
     .get('/tickets/types', getTicketsTypes)
-    .post('/tickets')
+    .post('/tickets', postTickets)
     .get('/payments')
     .post('/payments/process')
 
