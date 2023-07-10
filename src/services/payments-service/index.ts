@@ -6,8 +6,8 @@ export async function getTicketsByType(){
     return await paymentRepository.ticketsByTypes();
 };
 
-export async function getTicketsUser(token: string, ticketTypeId: number){
-    const tickets = await paymentRepository.getTickets(token, ticketTypeId);
+export async function getTicketsUser(token: string){
+    const tickets = await paymentRepository.getTickets(token);
     
     return tickets
 };

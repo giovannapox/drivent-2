@@ -6,7 +6,7 @@ export async function ticketsByTypes() {
     return prisma.ticketType.findMany();
 };
 
-export async function getTickets(token: string, ticketTypeId: number) {
+export async function getTickets(token: string) {
     const user = await prisma.session.findFirst({
         where: {
             token: token
@@ -16,50 +16,12 @@ export async function getTickets(token: string, ticketTypeId: number) {
     if (!user) {
         throw notFoundError();
     }
-
-    const enrollment = await prisma.enrollment.findFirst({
-        where: {
-            userId: user.userId
-        }
-    });
-    
-    await prisma.ticket.findFirst({
+ 
+    return await prisma.ticket.findFirst({
         where: {
             id: user.userId
         }
     });
-
-    const ticketType = await prisma.ticketType.findFirst({
-        where: {
-            id: ticketTypeId
-        }
-    });
-
-    const ticket = await prisma.ticket.findFirst({
-        where: {
-            enrollmentId: enrollment.id
-        }
-    });
-
-    const data = {
-        id: ticket.id,
-        status: ticket.status,
-        ticketTypeId: ticketTypeId,
-        enrollmentId: enrollment.id,
-        TicketType: {
-            id: ticketType.id,
-            name: ticketType.name,
-            price: ticketType.price,
-            isRemote: ticketType.isRemote,
-            includesHotel: ticketType.includesHotel,
-            createdAt: ticketType.createdAt,
-            updatedAt: ticketType.updatedAt,
-        },
-        createdAt: ticket.createdAt,
-        updatedAt: ticket.updatedAt
-    };
-
-    return data
 };
 
 export async function createTicket(token: string, ticketTypeId: number) {
