@@ -2,11 +2,11 @@ import { prisma } from '@/config';
 import { notFoundError, unauthorizedError } from '@/errors';
 import { Payment } from '@/protocols';
 
-export async function ticketsByTypes() {
+async function ticketsByTypes() {
     return prisma.ticketType.findMany();
 };
 
-export async function getTickets(token: string) {
+async function getTickets(token: string) {
     const user = await prisma.session.findFirst({
         where: {
             token: token
@@ -34,7 +34,7 @@ export async function getTickets(token: string) {
     });
 };
 
-export async function createTicket(token: string, ticketTypeId: number) {
+async function createTicket(token: string, ticketTypeId: number) {
     const user = await prisma.session.findFirst({
         where: {
             token: token
