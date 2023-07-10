@@ -19,7 +19,7 @@ async function getTickets(token: string) {
 
     const enrollment = await prisma.enrollment.findFirst({
         where:{
-          userId:user.id
+          userId:user.userId
         }
     });
   

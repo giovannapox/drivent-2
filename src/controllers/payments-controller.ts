@@ -41,7 +41,7 @@ export async function postTickets(req: Request, res: Response) {
         if (err.name === 'NotFoundError') {
             return res.sendStatus(httpStatus.NOT_FOUND);
         }
-        return res.sendStatus(httpStatus.BAD_REQUEST);
+        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 
@@ -61,7 +61,7 @@ export async function getPayment(req: Request, res: Response) {
         if (err.name === 'UnauthorizedError') {
             return res.sendStatus(httpStatus.UNAUTHORIZED);
         }
-        return res.sendStatus(httpStatus.BAD_REQUEST);
+        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 
@@ -81,6 +81,6 @@ export async function postPayments(req: Request, res: Response) {
         if (err.name === "UnauthorizedError") {
             return res.status(httpStatus.UNAUTHORIZED).send(err)
         }
-        return res.sendStatus(httpStatus.BAD_REQUEST);
+        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
