@@ -8,9 +8,6 @@ export async function getTicketsByType(){
 
 export async function getTicketsUser(token: string, ticketTypeId: number){
     const tickets = await paymentRepository.getTickets(token, ticketTypeId);
-    if (!tickets) {
-        throw notFoundError();
-    }
     
     return tickets
 };
