@@ -8,15 +8,9 @@ export async function getTickets(req: Request, res: Response) {
 
     const token = authHeader.split(' ')[1];
 
-    try {
-        const ticket = await ticketsService.getTicketsUser(token);
-        return res.status(httpStatus.OK).send(ticket);
-    } catch (err) {
-        if (err.name === 'NotFoundError') {
-            return res.sendStatus(httpStatus.NOT_FOUND);
-        }
-        return res.sendStatus(httpStatus.BAD_REQUEST);
-    }
+    const ticket = await ticketsService.getTicketsUser(token);
+    return res.status(httpStatus.OK).send(ticket);
+    
 }
 
 
