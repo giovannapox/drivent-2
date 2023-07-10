@@ -31,10 +31,12 @@ export async function getTicketsTypes(req: Request, res: Response) {
 }
 
 export async function postTickets(req: Request, res: Response) {
-    const { authorization } = req.headers;
+    const authHeader = req.header('Authorization');
     const { ticketTypeId } = req.body;
+
+    const token = authHeader.split(' ')[1];
     try {
-        const ticket = await postNewTicket(authorization.toString(), parseInt(ticketTypeId));
+        const ticket = await postNewTicket(token, parseInt(ticketTypeId));
         return res.status(httpStatus.CREATED).send(ticket);
     } catch (err) {
         if (err.name === 'NotFoundError') {
