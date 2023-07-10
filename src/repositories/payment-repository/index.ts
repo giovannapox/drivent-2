@@ -105,13 +105,6 @@ async function createPayment(payment: Payment) {
             }
         }
     });
-    const ticketIdExists = await prisma.payment.findFirst({
-        where: { ticketId: payment.ticketId }
-    })
-
-    if (!ticketIdExists) {
-        throw notFoundError();
-    }
 
     const numbers = payment.cardData.number.toString();
     const lastDigits = numbers[12] + numbers[13] + numbers[14] + numbers[15]
@@ -123,7 +116,16 @@ async function createPayment(payment: Payment) {
             value: ticket.TicketType.price
         }
     })
+
     return pay;
+}
+
+async function ticketId(ticketId: number){
+    return await prisma.ticket.findFirst({
+        where: {
+            id: ticketId
+        }
+    })
 }
 
 async function getPayments(token: string, ticketId: number) {
@@ -164,7 +166,8 @@ const paymentRepository = {
     getTickets,
     createTicket,
     createPayment,
-    getPayments
+    getPayments,
+    ticketId
 };
 
 export default paymentRepository;

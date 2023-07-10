@@ -22,6 +22,11 @@ async function postNewTicket(token: string, ticketTypeId: number){
 };
 
 async function postPayment(token: string, payment: Payment){
+    const ticketExists = await paymentRepository.ticketId(payment.ticketId);
+    if(!ticketExists) {
+        throw notFoundError();
+    };
+
     return await paymentRepository.createPayment(payment);
 };
 
